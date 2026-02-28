@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Jordan Blake",
+    "email": "jordan.blake@example.com",
+    "password": "seedpass1",
+    "bio": "Photographer and travel writer. Capturing cities one frame at a time.",
+    "location": "London, UK",
+    "website": "https://jordanblake.example.com",
+    "isPrivate": false
+  },
+  {
+    "name": "Sam Chen",
+    "email": "sam.chen@example.com",
+    "password": "seedpass2",
+    "bio": "Street photography and documentary. Focus on urban life and culture.",
+    "location": "Manchester, UK",
+    "website": "https://samchen.example.com",
+    "isPrivate": false
+  },
+  {
+    "name": "Alex Rivera",
+    "email": "alex.rivera@example.com",
+    "password": "seedpass3",
+    "bio": "Landscape and nature photographer. Advocate for sustainable travel.",
+    "location": "Edinburgh, UK",
+    "website": null,
+    "isPrivate": true
+  },
+  {
+    "name": "Morgan Taylor",
+    "email": "morgan.taylor@example.com",
+    "password": "seedpass4",
+    "bio": "Portrait and event photographer. Telling stories through people.",
+    "location": "Bristol, UK",
+    "website": "https://morgantaylor.example.com",
+    "isPrivate": false
+  },
+  {
+    "name": "Riley Kim",
+    "email": "riley.kim@example.com",
+    "password": "seedpass5",
+    "bio": "Food and lifestyle content. Recipes, reviews, and local spots.",
+    "location": "Leeds, UK",
+    "website": null,
+    "isPrivate": false
+  },
+  {
+    "name": "Casey O'Brien",
+    "email": "casey.obrien@example.com",
+    "password": "seedpass6",
+    "bio": "Architecture and design photography. Buildings and spaces.",
+    "location": "Birmingham, UK",
+    "website": "https://caseyobrien.example.com",
+    "isPrivate": false
+  },
+  {
+    "name": "Quinn Patel",
+    "email": "quinn.patel@example.com",
+    "password": "seedpass7",
+    "bio": "Wildlife and conservation. Documenting species and habitats.",
+    "location": "Glasgow, UK",
+    "website": "https://quinnpatel.example.com",
+    "isPrivate": false
+  },
+  {
+    "name": "Skyler Jones",
+    "email": "skyler.jones@example.com",
+    "password": "seedpass8",
+    "bio": "Music and festival photographer. Live gigs and backstage moments.",
+    "location": "Liverpool, UK",
+    "website": null,
+    "isPrivate": true
+  }
+]
