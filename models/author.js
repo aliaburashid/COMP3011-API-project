@@ -31,8 +31,7 @@ const authorSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// Index for fast lookup by email (login, uniqueness)
-authorSchema.index({ email: 1 })
+// email already has unique: true in schema (Mongoose creates the index); no duplicate index needed
 
 // Never send password in JSON 
 // automatically removes the password field when sending author data in an API response. Safer!
@@ -59,7 +58,7 @@ authorSchema.methods.generateAuthToken = function () {
   return jwt.sign({ _id: this._id }, secret)
 }
 
-// --- Follow: add another author to "this" author's following list (and add this to their followers)
+// Follow: add another author to "this" author's following list (and add this to their followers)
 authorSchema.methods.follow = async function (userId) {
   // Normalise to string so we can compare ObjectIds safely
   const id = userId.toString()
@@ -80,7 +79,7 @@ authorSchema.methods.follow = async function (userId) {
   }
 }
 
-// --- Unfollow: remove another author from "this" author's following list (and remove this from their followers)
+// Unfollow: remove another author from "this" author's following list (and remove this from their followers)
 authorSchema.methods.unfollow = async function (userId) {
   // Normalise to string for comparison
   const id = userId.toString()
