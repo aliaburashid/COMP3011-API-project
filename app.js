@@ -21,6 +21,18 @@ app.use((req, res, next) => {
 const apiRoutes = require('./routes/apiRoutes')
 app.use('/api', apiRoutes)
 
+// Analytics routes – marketing intelligence endpoints
+const analyticsRoutes = require('./routes/analyticsRoutes')
+app.use('/api', analyticsRoutes)
+
+// Brand routes – company management
+const brandRoutes = require('./routes/brandRoutes')
+app.use('/api', brandRoutes)
+
+// Sponsorship routes – influencer-brand deal management
+const sponsorshipRoutes = require('./routes/sponsorshipRoutes')
+app.use('/api', sponsorshipRoutes)
+
 // Health/root
 app.get('/', (req, res) => {
   res.json({ message: 'COMP3011 API is running' })

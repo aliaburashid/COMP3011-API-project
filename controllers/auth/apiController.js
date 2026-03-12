@@ -2,6 +2,7 @@
  * Auth API controller: signup, login, and middleware to protect routes.
  * Used by API routes only (JSON responses).
  */
+const mongoose = require('mongoose')
 const Author = require('../../models/author')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -89,11 +90,11 @@ exports.loginAuthor = async (req, res) => {
  */
 exports.getProfile = async (req, res) => {
   try {
-    // Send the logged-in author (password already hidden by model toJSON)
-    // Posts will be populated once the Post model is added
-    res.status(200).json({ author: req.user })
+    // Re-fetch the author from DB and populate their posts (now that Post model exists)
+    const author = await req.user.populate('posts')
+    // Send the populated author document (password hidden by toJSON)
+    res.status(200).json({ author })
   } catch (error) {
-    // Server error
     res.status(500).json({ message: error.message })
   }
 }
@@ -122,9 +123,11 @@ exports.indexAuthors = async (req, res) => {
  */
 exports.showAuthor = async (req, res) => {
   try {
-    // id comes from the URL, e.g. GET /api/authors/507f1f77bcf86cd799439011
+    // Return 400 for malformed ids (e.g. /api/authors/abc) before hitting the DB
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid author id' })
+    }
     const author = await Author.findById(req.params.id)
-    // No document with that id in the database
     if (!author) return res.status(404).json({ message: 'Author not found' })
     res.status(200).json({ author })
   } catch (error) {
@@ -139,6 +142,10 @@ exports.showAuthor = async (req, res) => {
  */
 exports.updateAuthor = async (req, res) => {
   try {
+    // Return 400 for malformed ids before checking ownership
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid author id' })
+    }
     // Only allow updating your own account (req.user from auth middleware)
     if (req.user._id.toString() !== req.params.id) {
       return res.status(403).json({ message: 'Forbidden: you can only update your own account' })
@@ -173,6 +180,10 @@ exports.updateAuthor = async (req, res) => {
  */
 exports.deleteAuthor = async (req, res) => {
   try {
+    // Return 400 for malformed ids before checking ownership
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid author id' })
+    }
     // Only allow deleting your own account
     if (req.user._id.toString() !== req.params.id) {
       return res.status(403).json({ message: 'Forbidden: you can only delete your own account' })
@@ -197,6 +208,10 @@ exports.deleteAuthor = async (req, res) => {
  */
 exports.followAuthor = async (req, res) => {
   try {
+    // Return 400 for malformed ids before any logic
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid author id' })
+    }
     // Prevent following yourself
     if (req.user._id.toString() === req.params.id) {
       return res.status(400).json({ message: 'You cannot follow yourself' })
@@ -225,6 +240,10 @@ exports.followAuthor = async (req, res) => {
  */
 exports.unfollowAuthor = async (req, res) => {
   try {
+    // Return 400 for malformed ids before any logic
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid author id' })
+    }
     // Prevent unfollowing yourself (no-op but cleaner to reject)
     if (req.user._id.toString() === req.params.id) {
       return res.status(400).json({ message: 'You cannot unfollow yourself' })
