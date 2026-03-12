@@ -15,12 +15,20 @@ const authorSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true, minLength: 6 },
 
-    // profile fields 
+    // Profile fields
     bio: { type: String, default: '', maxLength: 500 },
     profilePicture: { type: String, default: '/images/default-avatar.png', trim: true },
-    website: { type: String, trim: true },
-    location: { type: String, trim: true },
+    website: { type: String, trim: true, default: '' },
+    location: { type: String, trim: true, default: '' },
     isPrivate: { type: Boolean, default: false },
+
+    // Influencer-specific fields (sourced from Kaggle Instagram Influencers dataset)
+    // Stored as a numeric field for easy sorting and analytics (e.g. top-authors endpoint)
+    followerCount: { type: Number, default: 0, min: 0 },
+    // Content category (e.g. fashion, fitness, travel) – used for category-based analytics
+    category: { type: String, trim: true, default: 'general' },
+    // 60-day engagement rate as a percentage (from CSV: 60_day_eng_rate column)
+    engagementRate: { type: Number, default: 0, min: 0 },
 
     // Refs for relations 
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Author' }],
