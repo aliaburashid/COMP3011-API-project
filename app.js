@@ -38,4 +38,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'COMP3011 API is running' })
 })
 
+// 404 fallback – catches any request that did not match a defined route
+app.use((req, res) => {
+  res.status(404).json({ message: `Route ${req.method} ${req.originalUrl} not found` })
+})
+
 module.exports = app
