@@ -46,18 +46,23 @@ exports.createPost = async (req, res) => {
 }
 
 /**
- * GET /api/posts
- * List all posts, newest first. Populates author name and avatar.
+ * GET /api/posts?page=1&limit=10
+ * List posts, newest first. Supports pagination via query params.
  * Public – no auth required.
- * Returns 200 with { posts: [...] }.
+ * Returns 200 with { posts, total, page, pages }.
  */
 exports.indexPosts = async (req, res) => {
   try {
-    const posts = await Post.find({})
-      .sort({ createdAt: -1 })
-      .populate('author', 'name profilePicture')
+    const page = Math.max(1, parseInt(req.query.page) || 1)
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10))
+    const skip = (page - 1) * limit
 
-    res.status(200).json({ posts })
+    const [posts, total] = await Promise.all([
+      Post.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('author', 'name profilePicture'),
+      Post.countDocuments(),
+    ])
+
+    res.status(200).json({ posts, total, page, pages: Math.ceil(total / limit) })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

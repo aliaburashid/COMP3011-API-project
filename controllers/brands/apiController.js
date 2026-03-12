@@ -36,15 +36,23 @@ exports.createBrand = async (req, res) => {
 }
 
 /**
- * GET /api/brands
- * List all brands alphabetically.
+ * GET /api/brands?page=1&limit=10
+ * List brands alphabetically. Supports pagination via query params.
  * Public – no auth required.
- * Returns 200 with { brands: [...] }.
+ * Returns 200 with { brands, total, page, pages }.
  */
 exports.indexBrands = async (req, res) => {
   try {
-    const brands = await Brand.find({}).sort({ name: 1 })
-    res.status(200).json({ brands })
+    const page = Math.max(1, parseInt(req.query.page) || 1)
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10))
+    const skip = (page - 1) * limit
+
+    const [brands, total] = await Promise.all([
+      Brand.find({}).sort({ name: 1 }).skip(skip).limit(limit),
+      Brand.countDocuments(),
+    ])
+
+    res.status(200).json({ brands, total, page, pages: Math.ceil(total / limit) })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
