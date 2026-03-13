@@ -1,6 +1,12 @@
 # Coursework brief and requirements (local reference only)
 coursework-docs/
 
+# Editor/IDE project config (user-specific paths)
+.cursor/
+
+# IDE project config (user-specific paths)
+.cursor/
+
 # Logs
 logs
 *.log
