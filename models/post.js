@@ -1,33 +1,35 @@
 /**
- * Post model – content created by an influencer (Author).
- * Each post belongs to one Author (one-to-many relationship).
- * When a post is created, its _id is pushed into Author.posts.
- * When deleted, it is removed from Author.posts.
+ * Post model – content created by an Author (Instagram-style).
+ * Each post belongs to one Author.
+ * When a post is created its _id is pushed into Author.posts.
+ * When deleted it is removed from Author.posts and all its Comments are deleted.
  */
 const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema(
   {
-    // Reference to the Author who created this post (required)
+    // Author who created this post
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true },
-
-    // The main text/caption of the post (required)
+    // Caption text (up to 2200 chars like Instagram)
     caption: { type: String, required: true, trim: true, maxLength: 2200 },
-
-    // Optional URL to the image for this post
+    // URL to the post image
     imageUrl: { type: String, trim: true, default: '' },
-
-    // Stored as a count for easy sorting and analytics (not an array of user IDs)
+    // Optional location tag
+    location: { type: String, trim: true, default: '' },
+    // Like count – kept in sync with likedBy.length
     likesCount: { type: Number, default: 0, min: 0 },
-
-    // Hashtags extracted from the caption (e.g. ['travel', 'lifestyle'])
+    // Users who liked this post (used to toggle the heart and prevent double-likes)
+    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Author' }],
+    // Hashtags stored as an array of strings
     hashtags: [{ type: String, trim: true, lowercase: true }],
+    // References to Comment documents on this post
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+    // Whether only followers can see this post
+    isPrivate: { type: Boolean, default: false },
   },
-  // Automatically adds createdAt and updatedAt fields
   { timestamps: true }
 )
 
-// Index to make listing posts by author fast (used in GET /api/authors/:id/posts)
 postSchema.index({ author: 1, createdAt: -1 })
 
 const Post = mongoose.model('Post', postSchema)
