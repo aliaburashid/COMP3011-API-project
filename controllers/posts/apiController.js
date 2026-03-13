@@ -196,27 +196,73 @@ exports.listByAuthor = async (req, res) => {
 
 /**
  * POST /api/posts/:id/like
- * Increment the likesCount for a post by 1.
- * Auth required – users can only like posts, not set arbitrary counts.
- * Returns 200 with { likesCount }; 400 for bad id; 404 if not found.
+ * Toggle like on a post. Adds user to likedBy (and increments likesCount) if not
+ * already liked; removes and decrements if already liked.
+ * Returns 200 with { likesCount, liked: true|false }.
  */
 exports.likePost = async (req, res) => {
   try {
-    // Reject malformed ids immediately
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: 'Invalid post id' })
     }
 
-    // Atomically increment likesCount by 1 and return the updated document
-    const post = await Post.findByIdAndUpdate(
+    const post = await Post.findById(req.params.id)
+    if (!post) return res.status(404).json({ message: 'Post not found' })
+
+    const userId = req.user._id
+    const alreadyLiked = post.likedBy.some(id => id.toString() === userId.toString())
+
+    const updated = await Post.findByIdAndUpdate(
       req.params.id,
-      { $inc: { likesCount: 1 } },
+      alreadyLiked
+        ? { $pull: { likedBy: userId }, $inc: { likesCount: -1 } }
+        : { $addToSet: { likedBy: userId }, $inc: { likesCount: 1 } },
       { new: true }
     )
 
+    res.status(200).json({ likesCount: updated.likesCount, liked: !alreadyLiked })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+/**
+ * POST /api/posts/:id/save
+ * Toggle bookmark. Returns { saved: true|false }.
+ */
+exports.savePost = async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid post id' })
+    }
+    const post = await Post.findById(req.params.id)
     if (!post) return res.status(404).json({ message: 'Post not found' })
 
-    res.status(200).json({ likesCount: post.likesCount })
+    const userId = req.user._id
+    const author = await Author.findById(userId)
+    const alreadySaved = author.savedPosts.some(id => id.toString() === req.params.id)
+
+    await Author.findByIdAndUpdate(
+      userId,
+      alreadySaved
+        ? { $pull: { savedPosts: req.params.id } }
+        : { $addToSet: { savedPosts: req.params.id } }
+    )
+    res.status(200).json({ saved: !alreadySaved })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+/**
+ * GET /api/authors/saved
+ * Get all bookmarked posts for the logged-in user.
+ */
+exports.getSaved = async (req, res) => {
+  try {
+    const author = await Author.findById(req.user._id)
+      .populate({ path: 'savedPosts', populate: { path: 'author', select: 'name profilePicture' } })
+    res.status(200).json({ posts: author.savedPosts.reverse() })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
