@@ -172,11 +172,116 @@ Get your token from `POST /api/auth/login` or `POST /api/auth/signup`.
 
 ---
 
+## MCP Server (Model Context Protocol)
+
+The API is exposed as an **MCP server** so AI assistants (Cursor, Claude Desktop, etc.) can query FlickGallery directly.
+
+### Prerequisites
+
+1. **FlickGallery must be running** – start with `npm start` or `npm run dev`
+2. **MCP-capable client** – Cursor, Claude Desktop, or similar
+
+### Run the MCP server
+
+```bash
+npm run mcp
+```
+
+This starts the MCP server (stdio transport). It runs until you stop it. For Cursor/Claude, you typically add it as an MCP server in settings rather than running it manually in a terminal.
+
+### Configure in Cursor
+
+1. Open **Cursor Settings** → **MCP** (or **Features** → **MCP**)
+2. Add a new server with:
+
+| Field | Value |
+|-------|-------|
+| Name | `flickgallery` |
+| Command | `node` |
+| Args | `["/absolute/path/to/COMP3011-API-project/mcp-server/index.mjs"]` |
+| Env (optional) | `FLICK_API_URL=http://localhost:3000` |
+
+Use the full path to your project. If FlickGallery runs on a different port, set `FLICK_API_URL`.
+
+### Available tools
+
+| Tool | Description |
+|------|--------------|
+| `flick_list_posts` | List recent posts (supports `page`, `limit`) |
+| `flick_get_post` | Get a single post by ID |
+| `flick_list_authors` | List all authors |
+| `flick_get_author` | Get an author by ID |
+| `flick_get_author_posts` | List posts by author |
+| `flick_list_tags` | List all hashtags |
+| `flick_get_tag_posts` | Get posts by hashtag |
+
+After configuration, you can ask the AI things like: *"List the latest posts from FlickGallery"* or *"Get all posts by author X"*.
+
+---
+
 ## Data Sources
 
 - **Influencers**: [Top Instagram Influencers Dataset](https://www.kaggle.com/datasets/surajjha101/top-instagram-influencers-data) — Kaggle (CC0 Public Domain)
 - **Post images**: Hardcoded Unsplash URLs (free to use under Unsplash licence)
 - **Brands**: Hardcoded based on Forbes Global 2000 public company data
+
+---
+
+## MCP Server (Model Context Protocol)
+
+FlickGallery exposes an MCP server so AI assistants (Cursor, Claude Desktop, etc.) can query your API directly.
+
+### Prerequisites
+1. **Start the FlickGallery app** (`npm start` or `npm run dev`)
+2. The API must be running at `http://localhost:3000` (or set `FLICK_API_URL`)
+
+### Running the MCP server
+
+```bash
+npm run mcp
+```
+
+Or directly:
+
+```bash
+node mcp-server/index.mjs
+```
+
+### Configuring Cursor
+
+1. Open **Cursor Settings** → **MCP** → **Add new MCP server**
+2. Add a server with:
+   - **Name**: `flickgallery`
+   - **Command**: `node`
+   - **Args**: `["mcp-server/index.mjs"]` (use the full path to your project if needed, e.g. `/Users/you/path-to-project/mcp-server/index.mjs`)
+
+Or add to your MCP config (e.g. `~/.cursor/mcp.json` or project `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "flickgallery": {
+      "command": "node",
+      "args": ["/absolute/path/to/COMP3011-API-project/mcp-server/index.mjs"],
+      "env": {
+        "FLICK_API_URL": "http://localhost:3000"
+      }
+    }
+  }
+}
+```
+
+### Available tools
+
+| Tool | Description |
+|------|-------------|
+| `flick_list_posts` | List recent posts (supports page, limit) |
+| `flick_get_post` | Get a single post by ID |
+| `flick_list_authors` | List all authors |
+| `flick_get_author` | Get a single author by ID |
+| `flick_get_author_posts` | Get posts by a specific author |
+| `flick_list_tags` | List all hashtags |
+| `flick_get_tag_posts` | Get posts with a specific hashtag |
 
 ---
 
