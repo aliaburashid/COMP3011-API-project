@@ -44,6 +44,10 @@ app.get('/saved', authDataController.auth, postsDataController.savedFeed, postsV
 // Hashtag pages
 app.get('/tags/:tag', authDataController.auth, postsDataController.hashtagFeed, postsViewController.hashtagFeed)
 
+// Messages (DMs)
+const messageWebRoutes = require('./controllers/messages/routeController')
+app.use('/messages', messageWebRoutes)
+
 // ── API Routes (JSON) ──────────────────────────────────────────────────────────
 const apiRoutes = require('./routes/apiRoutes')           // auth + authors + posts
 app.use('/api', apiRoutes)
