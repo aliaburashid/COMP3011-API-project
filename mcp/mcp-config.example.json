@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "flickgallery": {
+      "command": "node",
+      "args": ["mcp-server/index.mjs"],
+      "env": {
+        "FLICK_API_URL": "http://localhost:3000"
+      }
+    }
+  }
+}
