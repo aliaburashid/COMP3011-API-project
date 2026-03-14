@@ -1,10 +1,13 @@
 # Coursework brief and requirements (local reference only)
 coursework-docs/
 
-# Editor/IDE project config (user-specific paths)
-.cursor/
+# Local docs (Postman collection, testing guides)
+docs/
 
-# IDE project config (user-specific paths)
+# MCP server (local use only)
+mcp-server/
+
+# Editor/IDE project config (user-specific paths)
 .cursor/
 
 # Logs

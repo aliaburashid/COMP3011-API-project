@@ -8,7 +8,6 @@
     "dev": "nodemon server.js",
     "seed": "node scripts/seed.js",
     "filter-and-import-kaggle": "node scripts/filter-and-import-kaggle.js",
-    "mcp": "node mcp-server/index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
