@@ -1,8 +1,19 @@
+/**
+ * Auth data controller — handles authentication, profile, explore, and follow logic.
+ * Uses JWT for sessions; supports cookie and Authorization header tokens.
+ */
 const Author = require('../../models/author')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-// Protect Routes (Check Token)
+// ---------------------------------------------------------------------------
+// Auth middleware
+// ---------------------------------------------------------------------------
+
+/**
+ * Protects routes by verifying JWT. Token can come from cookie, query param, or Authorization header.
+ * Attaches decoded author to req.author; returns 401 if invalid or missing.
+ */
 exports.auth = async (req, res, next) => {
   try {
     let token
@@ -26,7 +37,14 @@ exports.auth = async (req, res, next) => {
   }
 }
 
-// Register New Author
+// ---------------------------------------------------------------------------
+// Registration & login
+// ---------------------------------------------------------------------------
+
+/**
+ * Registers a new author. Hashes password via model pre-save; generates JWT and sets httpOnly cookie.
+ * Handles duplicate email (Mongo E11000) with user-friendly message for web view.
+ */
 exports.createAuthor = async (req, res, next) => {
   try {
     const author = new Author(req.body)
@@ -45,7 +63,10 @@ exports.createAuthor = async (req, res, next) => {
   }
 }
 
-// Log In Existing Author
+/**
+ * Logs in an existing author. Compares password with bcrypt; generates JWT and sets httpOnly cookie.
+ * Returns same error message for wrong email/password to avoid username enumeration.
+ */
 exports.loginAuthor = async (req, res, next) => {
   try {
     const { email, password } = req.body
@@ -67,7 +88,14 @@ exports.loginAuthor = async (req, res, next) => {
   }
 }
 
-// Show profile of logged-in user
+// ---------------------------------------------------------------------------
+// Profile (own)
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetches the logged-in user's profile with posts and saved posts populated.
+ * Tab defaults to 'posts' for Posts/Saved toggle on profile page.
+ */
 exports.showProfile = async (req, res, next) => {
   try {
     const profile = await Author.findById(req.author._id)
@@ -82,7 +110,9 @@ exports.showProfile = async (req, res, next) => {
   }
 }
 
-// Show Edit Profile Form
+/**
+ * Renders the edit profile form for the logged-in user.
+ */
 exports.editProfileView = async (req, res) => {
   try {
     const author = await Author.findById(req.author._id)
@@ -92,7 +122,9 @@ exports.editProfileView = async (req, res) => {
   }
 }
 
-// Handle profile updates (bio + optional image)
+/**
+ * Updates profile: bio, name (optional), and profile picture if multer uploaded a file.
+ */
 exports.updateProfile = async (req, res, next) => {
   try {
     const updates = { bio: req.body.bio }
@@ -105,7 +137,13 @@ exports.updateProfile = async (req, res, next) => {
   }
 }
 
-// Show the logged-in user's followers list
+// ---------------------------------------------------------------------------
+// Followers / Following
+// ---------------------------------------------------------------------------
+
+/**
+ * Loads the logged-in user's followers and sets res.locals.data.users for rendering.
+ */
 exports.showFollowers = async (req, res, next) => {
   try {
     const author = await Author.findById(req.author._id)
@@ -118,7 +156,9 @@ exports.showFollowers = async (req, res, next) => {
   }
 }
 
-// Show the logged-in user's following list
+/**
+ * Loads the logged-in user's following list and sets res.locals.data.users for rendering.
+ */
 exports.showFollowing = async (req, res, next) => {
   try {
     const author = await Author.findById(req.author._id)
@@ -131,7 +171,14 @@ exports.showFollowing = async (req, res, next) => {
   }
 }
 
-// Explore: list all authors with optional name/category search
+// ---------------------------------------------------------------------------
+// Explore & public profiles
+// ---------------------------------------------------------------------------
+
+/**
+ * Lists authors with optional search by name or category (query param `q`).
+ * Sorted by followerCount desc; limited to 200 results.
+ */
 exports.explore = async (req, res, next) => {
   try {
     const q = req.query.q ? req.query.q.trim() : ''
@@ -154,7 +201,10 @@ exports.explore = async (req, res, next) => {
   }
 }
 
-// Show any author's public profile
+/**
+ * Fetches a public author profile by ID. Excludes password; populates posts.
+ * Sets isFollowing so the view can show Follow/Unfollow button correctly.
+ */
 exports.showAuthorProfile = async (req, res, next) => {
   try {
     const author = await Author.findById(req.params.id)
@@ -173,7 +223,13 @@ exports.showAuthorProfile = async (req, res, next) => {
   }
 }
 
-// Follow an author from the web (POST /authors/:id/follow)
+// ---------------------------------------------------------------------------
+// Follow / Unfollow
+// ---------------------------------------------------------------------------
+
+/**
+ * Follows the author specified by req.params.id. Delegates to Author.follow().
+ */
 exports.followAuthor = async (req, res, next) => {
   try {
     await req.author.follow(req.params.id)
@@ -183,7 +239,9 @@ exports.followAuthor = async (req, res, next) => {
   }
 }
 
-// Unfollow an author from the web (POST /authors/:id/unfollow)
+/**
+ * Unfollows the author specified by req.params.id. Delegates to Author.unfollow().
+ */
 exports.unfollowAuthor = async (req, res, next) => {
   try {
     await req.author.unfollow(req.params.id)
@@ -193,7 +251,13 @@ exports.unfollowAuthor = async (req, res, next) => {
   }
 }
 
+// ---------------------------------------------------------------------------
 // Logout
+// ---------------------------------------------------------------------------
+
+/**
+ * Clears the auth cookie and res.locals.data.token. Calls next() for response handling.
+ */
 exports.logout = async (req, res, next) => {
   try {
     res.clearCookie('token')
