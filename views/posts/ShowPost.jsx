@@ -78,7 +78,7 @@ function ShowPost({ post, token, currentUserId, savedPostIds }) {
                         flexShrink: 0,
                     }}>
                         <a
-                            href={`/authors/${post.author._id}`}
+                            href={post.author._id.toString() === currentUserId ? '/authors/profile' : `/authors/${post.author._id}`}
                             style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}
                         >
                             <img

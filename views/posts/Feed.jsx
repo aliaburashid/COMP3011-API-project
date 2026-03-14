@@ -14,14 +14,19 @@ function Feed(props) {
                         <div key={post._id} id={`post-${post._id}`} className="post-card">
                             {/* Post Header */}
                             <div className="post-header">
-                                <div className="post-author">
+                                <a
+                                    href={(post.author?._id || post.author).toString() === currentUserId ? '/authors/profile' : `/authors/${post.author?._id || post.author}`}
+                                    className="post-author"
+                                    title="View profile"
+                                    style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                                >
                                     <img
                                         src={getAvatarUrl(post.author)}
                                         alt={post.author.name}
                                         className="author-avatar"
                                     />
                                     <span className="author-name">{post.author.name}</span>
-                                </div>
+                                </a>
                             </div>
 
                             {/* Post Image */}
