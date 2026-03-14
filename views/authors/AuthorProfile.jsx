@@ -79,26 +79,44 @@ function AuthorProfile({ author, currentUser, isFollowing, token }) {
               </h2>
 
               {!isOwnProfile && (
-                <form
-                  action={isFollowing
-                    ? `/authors/${author._id}/unfollow`
-                    : `/authors/${author._id}/follow`}
-                  method="POST"
-                  style={{ margin: 0 }}
-                >
-                  <button type="submit" style={{
-                    padding: '0.4rem 1.2rem',
-                    background: isFollowing ? 'white' : '#0095f6',
-                    color: isFollowing ? '#262626' : 'white',
-                    border: isFollowing ? '1px solid #dbdbdb' : 'none',
-                    borderRadius: '8px',
-                    fontWeight: '600',
-                    fontSize: '0.875rem',
-                    cursor: 'pointer',
-                  }}>
-                    {isFollowing ? 'Following' : 'Follow'}
-                  </button>
-                </form>
+                <>
+                  <a
+                    href={`/messages/${author._id}`}
+                    style={{
+                      padding: '0.4rem 1.2rem',
+                      background: 'white',
+                      color: '#262626',
+                      border: '1px solid #dbdbdb',
+                      borderRadius: '8px',
+                      fontWeight: '600',
+                      fontSize: '0.875rem',
+                      cursor: 'pointer',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Message
+                  </a>
+                  <form
+                    action={isFollowing
+                      ? `/authors/${author._id}/unfollow`
+                      : `/authors/${author._id}/follow`}
+                    method="POST"
+                    style={{ margin: 0, display: 'inline' }}
+                  >
+                    <button type="submit" style={{
+                      padding: '0.4rem 1.2rem',
+                      background: isFollowing ? 'white' : '#0095f6',
+                      color: isFollowing ? '#262626' : 'white',
+                      border: isFollowing ? '1px solid #dbdbdb' : 'none',
+                      borderRadius: '8px',
+                      fontWeight: '600',
+                      fontSize: '0.875rem',
+                      cursor: 'pointer',
+                    }}>
+                      {isFollowing ? 'Following' : 'Follow'}
+                    </button>
+                  </form>
+                </>
               )}
             </div>
 

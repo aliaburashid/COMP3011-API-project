@@ -31,6 +31,8 @@ function Layout(props) {
               <a href={token ? '/posts' : '/'}><i className="fas fa-home"></i></a>
               {/* Explore icon */}
               <a href={token ? '/explore' : '#'} title="Explore people"><i className="fas fa-compass"></i></a>
+              {/* Messages icon */}
+              <a href={token ? '/messages' : '#'} title="Messages"><i className="far fa-envelope"></i></a>
               {/* New Post icon */}
               <a href={token ? '/posts/new' : '#'}><i className="fas fa-plus-square"></i></a>
               {/* Profile icon */}
