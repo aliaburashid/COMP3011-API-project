@@ -4,6 +4,8 @@
 
 ![FlickGallery Logo](https://img.shields.io/badge/FlickGallery-REST--API-blue?style=for-the-badge&logo=nodejs)
 
+**Live demo:** [https://flickgallery.onrender.com](https://flickgallery.onrender.com)
+
 ## 🚀 Project Overview
 
 FlickGallery is a REST API demonstration project that showcases modern web development concepts with an Instagram-inspired interface. The project focuses on demonstrating RESTful API design, CRUD operations, authentication, and MVC architecture patterns.
