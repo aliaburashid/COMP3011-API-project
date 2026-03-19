@@ -31,6 +31,9 @@ try {
   POST_IMAGES = require(path.join(DATA_DIR, 'post-images.js'))
 } catch (_) {}
 
+// Usernames that skip celebrity dataset — use Unsplash only (no local profile/post images)
+const USE_UNSPLASH_ONLY = new Set(['nba'])
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -211,6 +214,10 @@ const CATEGORY_TEMPLATES = {
     { caption: 'From the streets to the arena. Grateful for every moment. 🙏', imageUrl: 'https://images.unsplash.com/photo-1583586658723-b48cfe3df5f5?w=800', hashtags: ['basketball', 'grateful', 'journey'], likesCount: 356000 },
     { caption: 'Game faces on. It\'s time. ⚡🏀', imageUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800', hashtags: ['basketball', 'gameday', 'nba'], likesCount: 293000 },
     { caption: 'The secret? 1,000 extra shots every day when no one is watching. 🎯', imageUrl: 'https://images.unsplash.com/photo-1519861531473-28aa21b0f58b?w=800', hashtags: ['basketball', 'dedication', 'shooting'], likesCount: 267000 },
+    { caption: 'NBA Finals energy. This is what we work for. 🏆', imageUrl: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800', hashtags: ['nba', 'basketball', 'finals'], likesCount: 489000 },
+    { caption: 'Ball is life. Every practice, every game. 🏀', imageUrl: 'https://images.unsplash.com/photo-1560153778-0e1c4f0096c4?w=800', hashtags: ['nba', 'basketball', 'ballislife'], likesCount: 412000 },
+    { caption: 'Arena lights. Nothing like game night. 🌟', imageUrl: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800', hashtags: ['nba', 'basketball', 'gamenight'], likesCount: 378000 },
+    { caption: 'Swiish. That sound never gets old. 🎯', imageUrl: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800', hashtags: ['nba', 'basketball', 'shooting'], likesCount: 356000 },
   ],
 
   mma: [
@@ -425,8 +432,8 @@ function rowToAuthor(row, index) {
   const usernameKey = String(rawName).trim().toLowerCase()
   const category = CATEGORY_MAP[usernameKey] || 'general'
 
-  // Profile picture: from Kaggle celebrity dataset (run filter-and-import-kaggle first)
-  const profilePicture = PROFILE_IMAGES[usernameKey] || ''
+  // Profile picture: skip celebrity dataset for USE_UNSPLASH_ONLY (e.g. nba); use default avatar
+  const profilePicture = USE_UNSPLASH_ONLY.has(usernameKey) ? '' : (PROFILE_IMAGES[usernameKey] || '')
 
   return {
     name: String(rawName).trim().slice(0, 100) || `Influencer ${index + 1}`,
@@ -539,7 +546,7 @@ async function seed() {
         const chosen = sample(templates, postCount)
 
         const usernameKey = String(author.name).trim().toLowerCase().replace(/\s+/g, '.')
-        const celebImages = POST_IMAGES[usernameKey] || []
+        const celebImages = USE_UNSPLASH_ONLY.has(usernameKey) ? [] : (POST_IMAGES[usernameKey] || [])
 
         categoryStats[cat] = (categoryStats[cat] || 0) + chosen.length
 
@@ -548,7 +555,7 @@ async function seed() {
           const template = chosen[t]
           const handle = slugify(author.name).replace(/\./g, '')
           const extraTag = Math.random() > 0.6 ? [handle] : []
-          // Use celebrity image if available, else Unsplash
+          // Use celebrity image if available (skip for USE_UNSPLASH_ONLY), else Unsplash
           const imageUrl = celebImages[t] || template.imageUrl
           postsToInsert.push({
             author: author._id,
