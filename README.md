@@ -64,57 +64,86 @@ FlickGallery is a REST API demonstration project that showcases modern web devel
 
 ```
 COMP3011-API-project/
-├── server.js              # Entry point
-├── app.js                 # Express app configuration
-├── package.json
-├── .env.example
-├── controllers/           # Route handlers (MVC)
-│   ├── auth/              # Signup, login, profile
-│   ├── posts/             # Posts CRUD, view logic
-│   ├── comments/
-│   ├── tags/
-│   └── messages/
-├── models/                # Mongoose schemas
-│   ├── author.js
-│   ├── post.js
-│   ├── comment.js
-│   ├── message.js
-│   └── db.js              # MongoDB connection
-├── routes/
-│   ├── apiRoutes.js       # Main API routes (/api/*)
-│   ├── tagRoutes.js
-│   ├── commentRoutes.js
-│   └── messageRoutes.js
-├── middleware/
-│   ├── auth.js            # JWT authentication
-│   └── upload.js          # Multer image upload
-├── views/                 # JSX server-side templates
-│   ├── layouts/
-│   ├── auth/
-│   ├── authors/
-│   ├── posts/
-│   ├── messages/
-│   └── utils/
-├── public/                # Static assets
-│   ├── styles.css
-│   ├── images/
-│   ├── passToggle.js
-│   ├── flashMessages.js
-│   └── commentFunctionality.js
-├── data/                  # Seed data
-│   ├── profile-images.js
-│   ├── post-images.js
-│   └── instagram-influencers.csv
-├── scripts/
-│   ├── seed.js            # Database seeding
-│   ├── filter-and-import-kaggle.js
-│   └── add-postman-tests.js
-├── docs/
-│   ├── API-DOCUMENTATION.md
-│   ├── API-DOCUMENTATION.pdf    # For coursework submission
-│   ├── FlickGallery-API.postman_collection.json
-│   └── POSTMAN_GUIDE.md
-└── coursework-docs/       # Assignment brief
+├── 📁 controllers/
+│   ├── 📁 auth/
+│   │   ├── apiController.js      # API endpoints for signup, login
+│   │   ├── dataController.js     # Auth business logic
+│   │   ├── routeController.js    # Auth web routes
+│   │   └── viewController.js     # Auth view rendering
+│   ├── 📁 posts/
+│   │   ├── apiController.js      # API endpoints for posts
+│   │   ├── dataController.js     # Post business logic
+│   │   ├── routeController.js    # Post web routes
+│   │   └── viewController.js     # Post view rendering
+│   ├── 📁 comments/
+│   │   └── apiController.js      # API endpoints for comments
+│   ├── 📁 tags/
+│   │   └── apiController.js      # API endpoints for tags/hashtags
+│   └── 📁 messages/
+│       ├── apiController.js      # API endpoints for DMs
+│       ├── dataController.js     # Message business logic
+│       ├── routeController.js    # Message web routes
+│       └── viewController.js     # Message view rendering
+├── 📁 middleware/
+│   ├── auth.js                   # JWT authentication middleware
+│   └── upload.js                 # Multer file upload processing
+├── 📁 models/
+│   ├── author.js                 # Author (user) model schema
+│   ├── post.js                   # Post model schema
+│   ├── comment.js                # Comment model schema
+│   ├── message.js                # Message model schema
+│   └── db.js                     # MongoDB connection
+├── 📁 routes/
+│   ├── apiRoutes.js              # Main API routes (auth, authors, posts)
+│   ├── commentRoutes.js          # Comment API routes
+│   ├── messageRoutes.js          # Message API routes
+│   └── tagRoutes.js              # Tag/hashtag API routes
+├── 📁 views/
+│   ├── 📁 auth/
+│   │   ├── EditProfile.jsx       # Profile editing form
+│   │   ├── SignIn.jsx            # Login form
+│   │   └── SignUp.jsx            # Registration form
+│   ├── 📁 authors/
+│   │   ├── AuthorProfile.jsx     # Author profile view
+│   │   ├── Explore.jsx           # Explore/search authors
+│   │   └── FollowList.jsx        # Followers/following list
+│   ├── 📁 layouts/
+│   │   └── Layout.jsx            # Main layout component
+│   ├── 📁 messages/
+│   │   ├── Conversation.jsx     # DM conversation view
+│   │   └── Inbox.jsx            # Inbox view
+│   ├── 📁 posts/
+│   │   ├── Feed.jsx              # Main feed view
+│   │   ├── HashtagFeed.jsx       # Posts by hashtag
+│   │   ├── NewPost.jsx           # Post creation form
+│   │   ├── Profile.jsx          # User profile view
+│   │   ├── Saved.jsx             # Saved posts view
+│   │   └── ShowPost.jsx          # Single post view
+│   └── 📁 utils/
+│       └── avatar.js              # Avatar/profile picture helper
+├── 📁 public/
+│   ├── styles.css                # Main stylesheet
+│   ├── images/                   # Static images (profiles, posts)
+│   ├── passToggle.js             # Password visibility toggle
+│   ├── flashMessages.js          # Flash message handling
+│   └── commentFunctionality.js   # Comment form client-side logic
+├── 📁 data/
+│   ├── profile-images.js         # Profile image mappings (Kaggle)
+│   ├── post-images.js            # Post image mappings (Kaggle)
+│   ├── seed-authors.json         # Fallback sample authors
+│   └── instagram-influencers.csv # Kaggle influencers data (add manually)
+├── 📁 scripts/
+│   ├── seed.js                   # Database seeding
+│   ├── filter-and-import-kaggle.js # Import Kaggle celebrity images
+│   └── add-postman-tests.js      # Add tests to Postman collection
+├── 📁 docs/
+│   ├── API-DOCUMENTATION.pdf     # Full API reference (coursework)
+│   ├── FlickGallery-API.postman_collection.json  # Postman collection
+│   └── POSTMAN_GUIDE.md          # Postman usage guide
+├── app.js                        # Express app configuration
+├── server.js                     # Server entry point
+├── package.json                  # Dependencies and scripts
+└── .env.example                  # Environment variables template
 ```
 
 ---
