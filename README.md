@@ -221,6 +221,7 @@ View this PDF for full API documentation with endpoints, parameters, response fo
 
 - **[API-DOCUMENTATION.pdf](docs/API-DOCUMENTATION.pdf)** — Complete API reference (PDF)
 - **Postman collection:** [docs/FlickGallery-API.postman_collection.json](docs/FlickGallery-API.postman_collection.json) — Import into Postman for testing
+- **Postman API docs (online):** [FlickGallery API](https://documenter.getpostman.com/view/47205615/2sBXihpXzV#313b6c27-19ec-4e43-b20f-81877bc74b03)
 
 ### 1. Auth
 
