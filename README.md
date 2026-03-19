@@ -1,162 +1,282 @@
-# Influencer Marketing Intelligence API
+# 📸 FlickGallery - REST API Social Media Platform
 
-A RESTful API built with **Node.js**, **Express**, and **MongoDB Atlas** for COMP3011 Web Services coursework. It models an influencer marketing platform with full CRUD for influencers, posts, brands, and sponsorships — plus seven analytics endpoints for marketing intelligence insights.
+> **A modern, full-stack web application demonstrating REST API concepts with Node.js, Express, MongoDB, and JSX View Engine**
 
----
+![FlickGallery Logo](https://img.shields.io/badge/FlickGallery-REST--API-blue?style=for-the-badge&logo=nodejs)
 
-## Tech Stack
+## 🚀 Project Overview
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Framework | Express.js v5 |
-| Database | MongoDB Atlas (Mongoose ODM) |
-| Authentication | JWT (`jsonwebtoken`) + bcrypt |
-| Dataset | Kaggle — Top Instagram Influencers |
+FlickGallery is a REST API demonstration project that showcases modern web development concepts with an Instagram-inspired interface. The project focuses on demonstrating RESTful API design, CRUD operations, authentication, and MVC architecture patterns.
+
+### 📋 Wireframe & Design
+- **Wireframe Documentation**: [View Wireframe](https://docs.google.com/document/d/1QBZTRSbJG-Ua9X5c4dpJdOj92AUkLNowKYgllVb4d2o/edit?tab=t.0#heading=h.ywd8tfo28l0j)
 
 ---
 
-## Project Structure
+### Key Features
+
+- **User Authentication** — Secure JWT-based login/signup system
+- **Instagram-like UI/UX** — Modern, responsive design with smooth animations
+- **Photo Sharing** — Upload, process, and display images with captions
+- **Comment System** — Add comments to posts with user interactions
+- **User Profiles** — Customizable profiles with bio and profile pictures
+- **REST API Design** — Demonstrates proper HTTP methods and status codes
+- **Direct Messages** — Inbox, sent, conversations, mark as read
+- **Tags & Hashtags** — Browse posts by tag
+
+---
+
+## 🛠️ Technology Stack
+
+### Backend Technologies
+
+| Technology | Description |
+|------------|-------------|
+| **Node.js** | JavaScript runtime environment |
+| **Express.js** | Web application framework |
+| **MongoDB** | NoSQL database with Mongoose ODM |
+| **JWT** | JSON Web Tokens for authentication |
+| **bcrypt** | Password hashing and security |
+| **Multer** | File upload handling |
+| **Sharp** | Image processing |
+
+### Frontend Technologies
+
+| Technology | Description |
+|------------|-------------|
+| **JSX View Engine** | Server-side rendering with JSX syntax |
+| **CSS3** | Modern styling with animations and transitions |
+| **Font Awesome** | Icon library for UI elements |
+| **Google Fonts** | Custom typography |
+
+### Development Tools
+
+| Technology | Description |
+|------------|-------------|
+| **Nodemon** | Auto-restart of the server during development |
+| **Morgan** | HTTP request logger |
+| **Method Override** | PUT/DELETE support in forms |
+| **dotenv** | Environment variables management |
+
+---
+
+## 📁 Project Structure
 
 ```
-├── app.js                          # Express app — middleware and route mounting
-├── server.js                       # Entry point — DB connection and server start
-├── models/
-│   ├── author.js                   # Influencer schema (followerCount, engagementRate, category)
-│   ├── post.js                     # Post schema (caption, imageUrl, likesCount, hashtags)
-│   ├── brand.js                    # Brand schema (name, industry, country)
-│   └── sponsorship.js              # Sponsorship schema (author ↔ brand deal)
-├── controllers/
-│   ├── auth/apiController.js       # Signup, login, profile, follow/unfollow
-│   ├── posts/apiController.js      # Post CRUD + like endpoint
-│   ├── brands/apiController.js     # Brand CRUD
-│   ├── sponsorships/apiController.js # Sponsorship CRUD
-│   └── analytics/apiController.js  # 7 analytics endpoints
-├── middleware/
-│   └── auth.js                     # JWT auth middleware for protected routes
+COMP3011-API-project/
+├── server.js              # Entry point
+├── app.js                 # Express app configuration
+├── package.json
+├── .env.example
+├── controllers/           # Route handlers (MVC)
+│   ├── auth/              # Signup, login, profile
+│   ├── posts/             # Posts CRUD, view logic
+│   ├── comments/
+│   ├── tags/
+│   └── messages/
+├── models/                # Mongoose schemas
+│   ├── author.js
+│   ├── post.js
+│   ├── comment.js
+│   ├── message.js
+│   └── db.js              # MongoDB connection
 ├── routes/
-│   ├── apiRoutes.js                # Author and post routes
-│   ├── brandRoutes.js              # Brand routes
-│   ├── sponsorshipRoutes.js        # Sponsorship routes
-│   └── analyticsRoutes.js          # Analytics routes
+│   ├── apiRoutes.js       # Main API routes (/api/*)
+│   ├── tagRoutes.js
+│   ├── commentRoutes.js
+│   └── messageRoutes.js
+├── middleware/
+│   ├── auth.js            # JWT authentication
+│   └── upload.js          # Multer image upload
+├── views/                 # JSX server-side templates
+│   ├── layouts/
+│   ├── auth/
+│   ├── authors/
+│   ├── posts/
+│   ├── messages/
+│   └── utils/
+├── public/                # Static assets
+│   ├── styles.css
+│   ├── images/
+│   ├── passToggle.js
+│   ├── flashMessages.js
+│   └── commentFunctionality.js
+├── data/                  # Seed data
+│   ├── profile-images.js
+│   ├── post-images.js
+│   └── instagram-influencers.csv
 ├── scripts/
-│   └── seed.js                     # Database seeder (authors, posts, brands, sponsorships)
-└── data/
-    ├── instagram-influencers.csv   # Kaggle dataset (Top Instagram Influencers)
-    └── seed-authors.json           # Fallback author seed data
+│   ├── seed.js            # Database seeding
+│   ├── filter-and-import-kaggle.js
+│   └── add-postman-tests.js
+├── docs/
+│   ├── API-DOCUMENTATION.md
+│   ├── API-DOCUMENTATION.pdf    # For coursework submission
+│   ├── FlickGallery-API.postman_collection.json
+│   └── POSTMAN_GUIDE.md
+└── coursework-docs/       # Assignment brief
 ```
 
 ---
 
-## Setup
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js v18+
-- A MongoDB Atlas account (free tier works)
 
-### 1. Clone and install
+- **Node.js** (v18 or higher)
+- **MongoDB** (local installation or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+- **Git** (for version control)
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/aliaburashid/COMP3011-API-project.git
 cd COMP3011-API-project
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
 ```
 
-### 2. Configure environment variables
+This will install all required dependencies including:
 
-Copy `.env.example` to `.env` and fill in your values:
+**Production Dependencies:**
 
-```bash
-cp .env.example .env
-```
+- `bcrypt` — Password hashing
+- `dotenv` — Environment variables
+- `express` — Web framework
+- `jsonwebtoken` — JWT authentication
+- `jsx-view-engine` — JSX rendering
+- `method-override` — PUT/DELETE support
+- `mongoose` — MongoDB ODM
+- `morgan` — HTTP logging
+- `multer` — File uploads
+- `sharp` — Image processing
 
+### 3. Environment Setup
+Create a `.env` file in the root directory:
 ```env
+MONGO_URI=mongodb://localhost:27017/flickgallery
+JWT_SECRET=your-secret-key-here
 PORT=3000
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/comp3011-api
-JWT_SECRET=your_jwt_secret_here
 ```
 
-### 3. Seed the database
+### 4. Seed the Database
 
 ```bash
 npm run seed
 ```
 
-This will populate the database with:
-- ~200 influencers from the Kaggle Instagram dataset
-- ~600 posts using Unsplash image URLs
-- 20 brands (based on Forbes Global 2000 companies)
-- ~88 sponsorship deals linking influencers and brands
+This populates the database with influencers from the Kaggle Instagram dataset, posts, and comments.
 
-### 4. Start the server
+### 5. Start the Server
 
 ```bash
 npm run dev     # development (nodemon)
 npm start       # production
 ```
 
-The API will be available at `http://localhost:3000`.
+- **Web app:** [http://localhost:3000/authors](http://localhost:3000/authors) (login, feed, profiles)
 
 ---
 
 ## API Endpoints
 
-### Authentication
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/auth/signup` | No | Register a new influencer |
-| POST | `/api/auth/login` | No | Login and receive JWT token |
-| GET | `/api/auth/profile` | Yes | Get logged-in user's profile |
+**Base URL:** `http://localhost:3000/api`
 
-### Authors (Influencers)
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET | `/api/authors` | No | List all influencers |
-| GET | `/api/authors/:id` | No | Get a single influencer |
-| PUT | `/api/authors/:id` | Yes (owner) | Update your profile |
-| DELETE | `/api/authors/:id` | Yes (owner) | Delete your account |
-| POST | `/api/authors/:id/follow` | Yes | Follow an influencer |
-| POST | `/api/authors/:id/unfollow` | Yes | Unfollow an influencer |
+View this PDF for full API documentation with endpoints, parameters, response formats, and status codes:
 
-### Posts
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/posts` | Yes | Create a post |
-| GET | `/api/posts` | No | List all posts |
-| GET | `/api/posts/:id` | No | Get a single post |
-| PUT | `/api/posts/:id` | Yes (owner) | Update your post |
-| DELETE | `/api/posts/:id` | Yes (owner) | Delete your post |
-| POST | `/api/posts/:id/like` | Yes | Like a post |
-| GET | `/api/authors/:id/posts` | No | List posts by author |
+- **[API-DOCUMENTATION.pdf](docs/API-DOCUMENTATION.pdf)** — Complete API reference (PDF)
+- **Postman collection:** [docs/FlickGallery-API.postman_collection.json](docs/FlickGallery-API.postman_collection.json) — Import into Postman for testing
 
-### Brands
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/brands` | Yes | Create a brand |
-| GET | `/api/brands` | No | List all brands |
-| GET | `/api/brands/:id` | No | Get a single brand |
-| PUT | `/api/brands/:id` | Yes | Update a brand |
-| DELETE | `/api/brands/:id` | Yes | Delete a brand |
+### 1. Auth
 
-### Sponsorships
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/sponsorships` | Yes | Create a sponsorship deal |
-| GET | `/api/sponsorships` | No | List all sponsorships |
-| GET | `/api/sponsorships/:id` | No | Get a single sponsorship |
-| PUT | `/api/sponsorships/:id` | Yes | Update a sponsorship |
-| DELETE | `/api/sponsorships/:id` | Yes | Delete a sponsorship |
+| Method | Endpoint | Auth | Status | Description |
+|--------|----------|------|--------|-------------|
+| POST | `/auth/signup` | No | 201 | Create account. Body: `{ name, email, password }` |
+| | | | 400 | Validation error, missing fields, or Email already exists |
+| POST | `/auth/login` | No | 200 | Login. Body: `{ email, password }`. Returns `{ author, token }` |
+| | | | 400 | Invalid login credentials |
 
-### Analytics
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET | `/api/analytics/top-influencers` | No | Top 10 influencers by follower count |
-| GET | `/api/analytics/most-liked-posts` | No | Top 10 most liked posts |
-| GET | `/api/analytics/most-active-authors` | No | Top 10 authors by post count |
-| GET | `/api/analytics/category-stats` | No | Influencer stats grouped by category |
-| GET | `/api/analytics/top-brands` | No | Top 10 brands by number of sponsorships |
-| GET | `/api/analytics/top-sponsored-influencers` | No | Top 10 influencers by deal value |
-| GET | `/api/analytics/high-value-campaigns` | No | Top 10 highest value sponsorship deals |
+### 2. Authors (CRUD)
+
+| Method | Endpoint | Auth | Status | Description |
+|--------|----------|------|--------|-------------|
+| GET | `/authors` | No | 200 | List all authors |
+| GET | `/authors/profile` | Yes | 200 | Get logged-in user's profile |
+| | | | 401 | Not authorized |
+| GET | `/authors/saved` | Yes | 200 | Get saved/bookmarked posts |
+| GET | `/authors/:id` | No | 200 | Get one author by ID |
+| | | | 400 | Invalid author id |
+| | | | 404 | Author not found |
+| PUT | `/authors/:id` | Yes | 200 | Update author |
+| | | | 401 | Not authorized |
+| | | | 403 | Forbidden: you can only update your own account |
+| DELETE | `/authors/:id` | Yes | 204 | Delete author |
+| | | | 403 | Forbidden |
+| POST | `/authors/:id/follow` | Yes | 200 | Follow an author |
+| | | | 400 | You cannot follow yourself |
+| POST | `/authors/:id/unfollow` | Yes | 200 | Unfollow an author |
+| GET | `/authors/:id/posts` | No | 200 | Get posts by author |
+
+### 3. Posts (CRUD)
+
+| Method | Endpoint | Auth | Status | Description |
+|--------|----------|------|--------|-------------|
+| GET | `/posts` | No | 200 | List posts. Query: `?page=1&limit=10` |
+| GET | `/posts/:id` | No | 200 | Get one post |
+| | | | 400 | Invalid post id |
+| | | | 404 | Post not found |
+| POST | `/posts` | Yes | 201 | Create post. Body: `{ caption, imageUrl, hashtags[] }` |
+| | | | 400 | Validation error |
+| | | | 401 | Not authorized |
+| PUT | `/posts/:id` | Yes | 200 | Update post (own only) |
+| | | | 403 | Forbidden |
+| DELETE | `/posts/:id` | Yes | 204 | Delete post (own only) |
+| POST | `/posts/:id/like` | Yes | 200 | Like a post |
+| POST | `/posts/:id/save` | Yes | 200 | Toggle save/unsave. Returns `{ saved: true\|false }` |
+
+### 4. Comments
+
+| Method | Endpoint | Auth | Status | Description |
+|--------|----------|------|--------|-------------|
+| GET | `/posts/:id/comments` | No | 200 | List comments on a post |
+| | | | 400 | Invalid post id |
+| | | | 404 | Post not found |
+| POST | `/posts/:id/comments` | Yes | 201 | Create comment. Body: `{ content }` |
+| | | | 400 | Missing content |
+| | | | 401 | Not authorized |
+| DELETE | `/comments/:id` | Yes | 204 | Delete comment (own only) |
+| | | | 403 | Forbidden |
+| POST | `/comments/:id/like` | Yes | 200 | Like a comment. Returns `{ likesCount }` |
+
+### 5. Tags (Hashtags)
+
+| Method | Endpoint | Auth | Status | Description |
+|--------|----------|------|--------|-------------|
+| GET | `/tags` | No | 200 | List all tags |
+| GET | `/tags/:tag` | No | 200 | Get posts by tag (e.g. `/tags/fashion`) |
+
+### 6. Messages (DMs)
+
+| Method | Endpoint | Auth | Status | Description |
+|--------|----------|------|--------|-------------|
+| POST | `/messages` | Yes | 201 | Send message. Body: `{ recipientId, content }` |
+| | | | 400 | Invalid recipientId, missing content, or cannot message yourself |
+| | | | 404 | Recipient not found |
+| GET | `/messages/inbox` | Yes | 200 | Get received messages |
+| GET | `/messages/sent` | Yes | 200 | Get sent messages |
+| GET | `/messages/conversation/:userId` | Yes | 200 | Get conversation with user |
+| | | | 400 | Invalid user id |
+| GET | `/messages/:id` | Yes | 200 | Get one message |
+| | | | 403 | Forbidden: not a participant |
+| | | | 404 | Message not found |
+| PUT | `/messages/:id/read` | Yes | 200 | Mark as read (recipient only) |
+| | | | 403 | Forbidden: only the recipient can mark as read |
+| DELETE | `/messages/:id` | Yes | 204 | Delete message (sender only) |
+| | | | 403 | Forbidden: only the sender can delete |
 
 ---
 
@@ -172,23 +292,29 @@ Get your token from `POST /api/auth/login` or `POST /api/auth/signup`.
 
 ---
 
-## Data Sources
+## HTTP Status Codes
 
-- **Influencers**: [Top Instagram Influencers Dataset](https://www.kaggle.com/datasets/surajjha101/top-instagram-influencers-data) — Kaggle (CC0 Public Domain)
-- **Post images**: Hardcoded Unsplash URLs (free to use under Unsplash licence)
-- **Brands**: Hardcoded based on Forbes Global 2000 public company data
+| Code | Meaning |
+|------|---------|
+| 200 | OK |
+| 201 | Created |
+| 204 | No Content (success, empty body) |
+| 400 | Bad Request (validation, invalid id, etc.) |
+| 401 | Unauthorized (missing or invalid token) |
+| 403 | Forbidden (valid token but not allowed) |
+| 404 | Not Found |
+| 500 | Internal Server Error |
 
 ---
 
-## HTTP Status Codes Used
+## Data Sources
 
-| Code | Meaning |
-|---|---|
-| 200 | OK |
-| 201 | Created |
-| 204 | No Content (successful delete) |
-| 400 | Bad Request (validation error or malformed ID) |
-| 401 | Unauthorised (missing or invalid token) |
-| 403 | Forbidden (authenticated but not owner) |
-| 404 | Not Found |
-| 500 | Internal Server Error |
+All data used in this project is cited below. See `data/README.md` for setup instructions.
+
+| Source | Use | Location | Licence |
+|--------|-----|----------|---------|
+| [Top Instagram Influencers Dataset](https://www.kaggle.com/datasets/surajjha101/top-instagram-influencers-data-cleaned) | Author names, usernames, influence metrics | `data/instagram-influencers.csv` | Kaggle (check dataset page) |
+| [Celebrity Database (332 names)](https://www.kaggle.com/datasets/mhmaslam/celebrity-database-332-names) | Profile images, post images | `data/profile-images.js`, `data/post-images.js`, `public/images/` | DbCL v1.0 (Open Data Commons) |
+| [Unsplash](https://unsplash.com/) | Post images (fallback for authors without Kaggle images, e.g. NBA) | `scripts/seed.js` — `images.unsplash.com` URLs | [Unsplash Licence](https://unsplash.com/license) |
+| `seed-authors.json` | Fallback sample authors when CSV is missing | `data/seed-authors.json` | Built-in (project) |
+| `default-avatar.png` | Placeholder for users without profile pictures | `public/images/default-avatar.png` | Project asset |
