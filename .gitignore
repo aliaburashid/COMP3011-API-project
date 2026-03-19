@@ -1,8 +1,10 @@
 # Coursework brief and requirements (local reference only)
 coursework-docs/
 
-# Local docs (Postman collection, testing guides)
-docs/
+# Note: docs/ is tracked — API documentation (PDF, Postman) required for coursework
+
+# Kaggle dataset download (run filter-and-import-kaggle after placing dataset here)
+data/dataset/
 
 # MCP server (local use only)
 mcp-server/
