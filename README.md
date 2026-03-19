@@ -211,12 +211,6 @@ npm start       # production
 
 ---
 
-## Deployment
-
-Deploy FlickGallery to the cloud (e.g. [Render](https://render.com)) with MongoDB Atlas. See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** for step-by-step instructions.
-
----
-
 ## API Endpoints
 
 **Base URL:** `http://localhost:3000/api`
