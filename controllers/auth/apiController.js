@@ -57,7 +57,11 @@ exports.createAuthor = async (req, res) => {
     const token = await author.generateAuthToken()
     res.status(201).json({ author, token })
   } catch (error) {
-    // Duplicate email or validation error (e.g. from Mongoose)
+    // Duplicate email: return user-friendly message instead of raw Mongo error
+    if (error.code === 11000 && error.keyPattern?.email) {
+      return res.status(400).json({ message: 'Email already exists' })
+    }
+    // Validation or other error
     res.status(400).json({ message: error.message })
   }
 }

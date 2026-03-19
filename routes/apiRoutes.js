@@ -8,15 +8,21 @@ const auth = require('../middleware/auth')
 router.post('/auth/signup', authController.createAuthor)
 router.post('/auth/login', authController.loginAuthor)
 
+
 // --- Authors ---
 router.get('/authors', authController.indexAuthors)
 router.get('/authors/profile', auth, authController.getProfile) // Must be before /authors/:id
+router.get('/authors/saved', auth, postController.getSaved)     // Must be before /authors/:id
 router.get('/authors/:id', authController.showAuthor)
 router.put('/authors/:id', auth, authController.updateAuthor)
 router.delete('/authors/:id', auth, authController.deleteAuthor)
-// Social
+
+
+// Social: follow / unfollow (auth required)
 router.post('/authors/:id/follow', auth, authController.followAuthor)
 router.post('/authors/:id/unfollow', auth, authController.unfollowAuthor)
+
+
 // Posts by a specific author (public)
 router.get('/authors/:id/posts', postController.listByAuthor)
 
